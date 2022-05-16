@@ -31,8 +31,9 @@ public class SalesController {
         return this.SalesRepository.save(sales);
     }
 
-    // @GetMapping("/{id}")
-    // public getSalesById(@PathVariable (value = "id") long userId) {
-        // return this.userRepository.findById(salesId)
-    // }
+    @GetMapping("/{id}")
+    public Sales getSalesById(@PathVariable (value = "id") long salesId) {
+        return this.SalesRepository.findById(salesId)
+        .orElseThrow(() -> new ResourceNotFoundException("Sale not found with id: " + salesId));
+    }
 }
