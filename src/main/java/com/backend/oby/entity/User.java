@@ -23,18 +23,31 @@ public class User {
 	
 	@Column(name = "email")
 	private String email;
+
+	@Column(name = "idSys")
+    private long idSys;
 	
 	public User() {
 		
 	}
 	
-	public User(String firstName, String lastName, String email) {
+	public User(long id, String firstName, String lastName, String email, long idSys) {
 		super();
+		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
+		this.idSys = idSys;
 	}
 	
+	public long getIdSys() {
+		return idSys;
+	}
+
+	public void setIdSys(long idSys) {
+		this.idSys = idSys;
+	}
+
 	public long getId() {
 		return id;
 	}
