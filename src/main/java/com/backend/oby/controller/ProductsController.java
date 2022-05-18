@@ -47,6 +47,7 @@ public class ProductsController {
 		 existingProduct.setName(existingProduct.getName());
 		 existingProduct.setPrice(existingProduct.getPrice());
 		 existingProduct.setQuantity(existingProduct.getQuantity());
+		 existingProduct.setRequests(existingProduct.getRequests());
 		 return this.productsRepository.save(existingProduct);
 	}
 	
