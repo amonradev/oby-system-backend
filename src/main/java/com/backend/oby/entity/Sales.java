@@ -18,9 +18,6 @@ public class Sales {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "idSys")
-    private long idSys;
-
     public Sales() {
 
     }
@@ -28,15 +25,6 @@ public class Sales {
     public Sales(String email, long idSys) {
         super();
         this.email = email;
-        this.idSys = idSys;
-    }
-
-    public long getIdSys() {
-        return idSys;
-    }
-
-    public void setIdSys(long idSys) {
-        this.idSys = idSys;
     }
 
     public long getId() {

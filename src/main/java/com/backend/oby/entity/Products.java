@@ -27,29 +27,17 @@ public class Products {
     @Column(name = "requests")
     private int requests;
 
-    @Column(name = "idSys")
-    private long idSys;
-
     public Products() {
 
     }
 
-    public Products(Long id, String name, int quantity, int price, int requests, long idSys) {
+    public Products(Long id, String name, int quantity, int price, int requests) {
         super();
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.price = price;
         this.requests = requests;
-        this.idSys = idSys;
-    }
-
-    public long getIdSys() {
-        return idSys;
-    }
-
-    public void setIdSys(long idSys) {
-        this.idSys = idSys;
     }
 
     public Long getId() {

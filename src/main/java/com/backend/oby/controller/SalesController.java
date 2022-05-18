@@ -7,9 +7,12 @@ import com.backend.oby.entity.Sales;
 import com.backend.oby.exception.ResourceNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,4 +39,20 @@ public class SalesController {
         return this.SalesRepository.findById(salesId)
         .orElseThrow(() -> new ResourceNotFoundException("Sale not found with id: " + salesId));
     }
+
+    @PutMapping("/{id}")
+	public Sales updateSales(@RequestBody Sales sales, @PathVariable ("id") long salesId) {
+		 Sales existingSale = this.SalesRepository.findById(salesId)
+			.orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + salesId));
+		 existingSale.setEmail(existingSale.getEmail());
+		 return this.SalesRepository.save(existingSale);
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Sales> deleteUser(@PathVariable ("id") long salesId){
+		 Sales existingSales = this.SalesRepository.findById(salesId)
+					.orElseThrow(() -> new ResourceNotFoundException("Clients not found with id: " + salesId));
+		 this.SalesRepository.delete(existingSales);
+		 return ResponseEntity.ok().build();
+	}
 }
