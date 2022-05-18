@@ -39,14 +39,6 @@ public class SalesController {
         return this.SalesRepository.findById(salesId)
         .orElseThrow(() -> new ResourceNotFoundException("Sale not found with id: " + salesId));
     }
-
-    @PutMapping("/{id}")
-	public Sales updateSales(@RequestBody Sales sales, @PathVariable ("id") long salesId) {
-		 Sales existingSale = this.SalesRepository.findById(salesId)
-			.orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + salesId));
-		 existingSale.setEmail(existingSale.getEmail());
-		 return this.SalesRepository.save(existingSale);
-	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Sales> deleteUser(@PathVariable ("id") long salesId){
