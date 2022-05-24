@@ -2,9 +2,10 @@ package com.backend.oby.controller;
 
 import com.backend.oby.entity.Clients;
 import com.backend.oby.exception.ResourceNotFoundException;
-import com.backend.oby.repository.ClientsRepository;
+import com.backend.oby.services.ClientsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,39 +23,34 @@ import java.util.List;
 public class ClientsController {
     
     @Autowired
-    private ClientsRepository clientsRepository;
+    private ClientsService clientsService;
 
     @GetMapping
-    public List<Clients> getAllClients() {
-        return this.clientsRepository.findAll();
+    public ResponseEntity<List<Clients>> getAllClients() {
+        return new ResponseEntity<>(this.clientsService.getAllClients(), HttpStatus.OK);
     }
 
     @PostMapping
-    public Clients createClient(@RequestBody Clients clients) {
-        return this.clientsRepository.save(clients);
+    public ResponseEntity<Void> createClient(@RequestBody Clients clients) {
+        this.clientsService.createClient(clients);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public Clients getClientById(@PathVariable (value = "id") long clientsId) {
-        return this.clientsRepository.findById(clientsId)
-        .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + clientsId));
+    public ResponseEntity<Clients> getClientById(@PathVariable (value = "id") long clientsId) {
+        this.clientsService.getClientById(clientsId);
+        return new ResponseEntity<>(this.clientsService.getClientById(clientsId), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-	public Clients updateClients(@RequestBody Clients client, @PathVariable ("id") long clientsId) {
-		 Clients existingClient = this.clientsRepository.findById(clientsId)
-			.orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + clientsId));
-		 existingClient.setName(existingClient.getName());
-		 existingClient.setDescription(existingClient.getDescription());
-		 existingClient.setSatisfaction(existingClient.getSatisfaction());
-		 return this.clientsRepository.save(existingClient);
-	}
+	public ResponseEntity<Void> updateClients(@RequestBody Clients client) {
+        this.clientsService.updateClients(client);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Clients> deleteUser(@PathVariable ("id") long clientsId){
-		 Clients existingClients = this.clientsRepository.findById(clientsId)
-					.orElseThrow(() -> new ResourceNotFoundException("Clients not found with id: " + clientsId));
-		 this.clientsRepository.delete(existingClients);
-		 return ResponseEntity.ok().build();
+	public ResponseEntity<Void> deleteUser(@PathVariable ("id") long clientsId){
+        this.clientsService.deleteUser(clientsId);
+        return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

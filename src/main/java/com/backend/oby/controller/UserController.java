@@ -5,8 +5,10 @@ import java.util.List;
 import com.backend.oby.entity.User;
 import com.backend.oby.exception.ResourceNotFoundException;
 import com.backend.oby.repository.UserRepository;
+import com.backend.oby.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,39 +24,33 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@GetMapping
-	public List<User> getAllUsers() {
-		return this.userRepository.findAll();
+	public ResponseEntity<List<User>> getAllUsers() {
+		return new ResponseEntity<>(this.userService.getAllUsers(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
-	public User getUserById(@PathVariable (value = "id") long userId) {
-		return this.userRepository.findById(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+	public ResponseEntity<User> getUserById(@PathVariable (value = "id") long userId) {
+		return new ResponseEntity<>(this.userService.getUserById(userId), HttpStatus.OK);
 	}
 
 	@PostMapping
-	public User createUser(@RequestBody User user) {
-		return this.userRepository.save(user);
+	public ResponseEntity<Void> createUser(@RequestBody User user) {
+		this.userService.createUser(user);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 	
-	@PutMapping("/{id}")
-	public User updateUser(@RequestBody User user, @PathVariable ("id") long userId) {
-		 User existingUser = this.userRepository.findById(userId)
-			.orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
-		 existingUser.setFirstName(user.getFirstName());
-		 existingUser.setLastName(user.getLastName());
-		 existingUser.setEmail(user.getEmail());
-		 return this.userRepository.save(existingUser);
+	@PutMapping
+	public ResponseEntity<Void> updateUser(@RequestBody User user) {
+		userService.updateUser(user);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<User> deleteUser(@PathVariable ("id") long userId){
-		 User existingUser = this.userRepository.findById(userId)
-					.orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
-		 this.userRepository.delete(existingUser);
-		 return ResponseEntity.ok().build();
+	public ResponseEntity<Void> deleteUser(@PathVariable ("id") long userId){
+		userService.deleteUser(userId);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

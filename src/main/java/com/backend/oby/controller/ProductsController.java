@@ -5,8 +5,10 @@ import java.util.List;
 import com.backend.oby.entity.Products;
 import com.backend.oby.exception.ResourceNotFoundException;
 import com.backend.oby.repository.ProductsRepository;
+import com.backend.oby.services.ProductsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,39 +25,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class ProductsController {
     
     @Autowired
-    private ProductsRepository productsRepository;
+    private ProductsService productsService;
 
     @GetMapping
-    public List<Products> getAllProducts() {
-        return this.productsRepository.findAll();
+    public ResponseEntity<List<Products>> getAllProducts() {
+        return new ResponseEntity<>(this.productsService.getAllProducts(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public Products getProductsById(@PathVariable (value = "id") long productsId) {
-        return this.productsRepository.findById(productsId).orElseThrow(() -> new ResourceNotFoundException("Products not found with id: "+ productsId));
-    }
+    public ResponseEntity<Products> getProductsById(@PathVariable (value = "id") long productsId) {
+		return new ResponseEntity<>(this.productsService.getProductsById(productsId), HttpStatus.OK);
+	}
 
     @PostMapping
-    public Products createProduct(@RequestBody Products products) {
-        return this.productsRepository.save(products);
+    public ResponseEntity<Void> createProduct(@RequestBody Products products) {
+		this.productsService.createProduct(products);
+		return new ResponseEntity<>(HttpStatus.OK);
     }
     
     @PutMapping("/{id}")
-	public Products updateProducts(@RequestBody Products products, @PathVariable ("id") long productsId) {
-		 Products existingProduct = this.productsRepository.findById(productsId)
-			.orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + productsId));
-		 existingProduct.setName(existingProduct.getName());
-		 existingProduct.setPrice(existingProduct.getPrice());
-		 existingProduct.setQuantity(existingProduct.getQuantity());
-		 existingProduct.setRequests(existingProduct.getRequests());
-		 return this.productsRepository.save(existingProduct);
+	public ResponseEntity<Void> updateProducts(@RequestBody Products products) {
+		this.productsService.updateProducts(products);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Products> deleteUser(@PathVariable ("id") long productsId){
-		 Products existingProducts = this.productsRepository.findById(productsId)
-					.orElseThrow(() -> new ResourceNotFoundException("Clients not found with id: " + productsId));
-		 this.productsRepository.delete(existingProducts);
-		 return ResponseEntity.ok().build();
+		this.productsService.deleteUser(productsId);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
