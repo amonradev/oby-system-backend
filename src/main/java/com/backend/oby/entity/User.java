@@ -23,17 +23,28 @@ public class User {
 	
 	@Column(name = "email")
 	private String email;
+
+	@Column(name = "password")
+	private String password;
 	
-	public User() {
-		
+	public String getPassword() {
+		return password;
 	}
-	
-	public User(long id, String firstName, String lastName, String email) {
-		super();
-		this.id = id;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public User(long id, String firstName, String lastName, String email, String password) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User() {
+		
 	}
 
 	public long getId() {
